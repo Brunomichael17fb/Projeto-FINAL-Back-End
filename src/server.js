@@ -1,9 +1,13 @@
-import express from "express"; // Importamos o express aqui para configurar o CORS
-import cors from "cors";       // NOVO: Importando o crachá de acesso
+import express from "express";
+import cors from "cors";
 import sequelize from "./config/database.js";
-import "./models/Product.js";
 import dotenv from "dotenv";
-import router from "./routes/index.js"; // Importe suas rotas aqui
+
+// --- IMPORTAÇÃO DOS MODELS ---
+import "./models/Product.js";
+import "./models/User.js";
+
+import router from "./routes/index.js";
 
 dotenv.config();
 
@@ -11,20 +15,23 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // --- CONFIGURAÇÕES DO EXPRESS ---
-app.use(cors());              // NOVO: Liberando acesso para o seu Front-end
-app.use(express.json());      // Permite que o servidor entenda JSON (o que vem do Insomnia)
-app.use(router);              // Usa as rotas que configuramos (GET, POST, etc)
+app.use(cors());
+app.use(express.json());
+app.use(router);
 
 async function start() {
     try {
+        // Testa a conexão com o banco
         await sequelize.authenticate();
-        console.log("Conexão com o banco OK! ✅");
+        console.log("Conexão com o banco OK!");
 
+        // Sincroniza os modelos com o banco de dados
         await sequelize.sync({ alter: true });
-        console.log("Tabelas sincronizadas! 🗄️");
+        console.log("Tabelas sincronizadas!");
 
+        // Inicia o servidor
         app.listen(PORT, () => {
-            console.log(`Servidor rodando em http://localhost:${PORT} 🚀`);
+            console.log(`Servidor rodando em http://localhost:${PORT}`);
         });
     } catch (error) {
         console.error("Erro ao ligar o servidor:", error);

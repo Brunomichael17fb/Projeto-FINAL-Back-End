@@ -1,24 +1,24 @@
 import { Router } from "express";
 import productController from "../controllers/productController.js";
+import UserController from "../controllers/UserController.js"; 
 
 const router = Router();
 
 // Rota de teste
 router.get("/", (req, res) => {
-  res.send("API rodando 🚀");
+  res.send("API Digital Store rodando");
 });
 
 // --- ROTAS DE PRODUTOS ---
-
-// LISTAR todos os produtos (GET)
 router.get("/products", productController.getAll);
-
-// CADASTRAR um novo produto (POST)
+router.get("/products/:id", productController.getById);
 router.post("/products", productController.create);
-
-// APAGAR um produto por ID (DELETE) - NOVO!
+router.put("/products/:id", productController.update);
 router.delete("/products/:id", productController.delete);
 
-router.put("/products/:id", productController.update);
+// --- ROTAS DE USUÁRIOS ---
+router.get("/users", UserController.getAll);   // Listar usuários
+router.post("/users", UserController.create); // Cadastrar usuário
+router.post("/login", UserController.login);
 
 export default router;
